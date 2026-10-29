@@ -333,12 +333,14 @@ const TOOLS = [
   { id: 'sponsors', name: 'Sponsors & Partners', desc: 'Review sponsorship and partnership inquiries.', perm: 'sponsors.view', href: 'sponsors.html#admin', tone: 'var(--amber)', tint: 'var(--amberbg)', icon: 'handshake' },
   { id: 'ambassadors', name: 'Brand Ambassadors', desc: 'Review ambassador applications.', perm: 'ambassadors.view', href: 'ambassadors.html#admin', tone: 'var(--blue)', tint: 'var(--bluebg)', icon: 'star' },
   { id: 'vote', name: 'TORQ VOTE', desc: 'Run award voting, live results and winner reveals.', perm: 'vote.view', href: 'vote.html#/admin', tone: 'var(--green)', tint: 'var(--greenbg)', icon: 'trophy' },
+  { id: 'checkin', name: 'Check-In', desc: 'Scan showcase passes, check cars in, set VIP parking and the schedule.', perm: 'checkin.scan', href: 'checkin.html#/team/scan', tone: 'var(--blue)', tint: 'var(--bluebg)', icon: 'qr' },
 ];
 const LINKS = [
   { name: 'Vehicle submission form', url: 'https://torqvehiclesubmission.netlify.app/', icon: 'car' },
   { name: 'Sponsor inquiry form', url: 'https://torq-becomeasponsor.netlify.app/', icon: 'handshake' },
   { name: 'Ambassador application', url: 'https://torqambassador.netlify.app/', icon: 'star' },
   { name: 'TORQ VOTE (public)', url: 'https://vote.torqevents.com/', icon: 'trophy' },
+  { name: 'Showcase check-in pass', url: 'https://checkin.torqevents.com/', icon: 'qr' },
   { name: 'torqevents.com', url: 'https://torqevents.com/', icon: 'globe' },
   { name: 'Instagram @thetorqevents', url: 'https://instagram.com/thetorqevents', icon: 'camera' },
 ];
@@ -353,6 +355,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const sv = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const I = {
+  qr: sv('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-4M14 18v3"/>'),
   car: sv('<path d="M5 17h14M3 13l2-5a3 3 0 012.8-2h8.4A3 3 0 0119 8l2 5v4h-2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>'),
   handshake: sv('<path d="M11 17l2 2a1.5 1.5 0 002-2"/><path d="M14 14l2.5 2.5a1.5 1.5 0 002-2L15 11"/><path d="M3 7l3-3 5 2 3-2 7 4-3 6"/><path d="M3 7l1 7 4 4a1.5 1.5 0 002-2"/><path d="M11 6l-3 3a1.5 1.5 0 002 2l3-2"/>'),
   star: sv('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),
@@ -399,10 +402,11 @@ const PERMS = [
   { group: 'Sponsors & Partners', icon: 'handshake', items: [['sponsors.view', 'See sponsor inquiries'], ['sponsors.review', 'Approve & deny inquiries']] },
   { group: 'Brand Ambassadors', icon: 'star', items: [['ambassadors.view', 'See ambassador applications'], ['ambassadors.review', 'Approve & deny applications']] },
   { group: 'TORQ VOTE', icon: 'trophy', items: [['vote.view', 'See vote results'], ['vote.manage', 'Run votes (events, awards, cars)']] },
+  { group: 'Check-In', icon: 'qr', items: [['checkin.scan', 'Scan & check in cars']] },
   { group: 'Team', icon: 'user', items: [['team.view', 'See the team directory']] },
 ];
 const PERM_KEYS = PERMS.flatMap(g => g.items.map(i => i[0]));
-const MEMBER_DEFAULT = ['submissions.view', 'submissions.review', 'sponsors.view', 'sponsors.review', 'ambassadors.view', 'ambassadors.review', 'vote.view', 'team.view'];
+const MEMBER_DEFAULT = ['submissions.view', 'submissions.review', 'sponsors.view', 'sponsors.review', 'ambassadors.view', 'ambassadors.review', 'vote.view', 'checkin.scan', 'team.view'];
 const defaultPerm = (u, k) => u.is_super || u.isSuper || u.role === 'admin' || MEMBER_DEFAULT.includes(k);
 const roleLabel = u => (u.is_super || u.isSuper) ? 'Super admin' : u.role === 'admin' ? 'Admin' : 'Team member';
 const can = k => !!(ME && ME.perms && ME.perms[k]);
